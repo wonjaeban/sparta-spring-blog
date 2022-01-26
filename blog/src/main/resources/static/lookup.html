@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>항해블로그</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <style>
+        .title {
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        .contents{
+            font-size: 20px;
+        }
+
+        .header {
+            width: 1580px;
+            height: 150px;
+            background-color: #339af0;
+        }
+
+        .name {
+            font-size: 50px;
+            color: aliceblue;
+            width: 250px;
+            margin: auto;
+            padding-top: 30px;
+
+        }
+
+        .wrap {
+            margin-left: 150px;
+            width: 1250px;
+        }
+
+        .username {
+            margin-top: 10px;
+        }
+
+        .buttons{
+            display: block;
+            margin:auto;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        A:link {text-decoration: none; color: aliceblue;}
+        A:visited {text-decoration: none; color: aliceblue;}
+        A:active {text-decoration: none; color: aliceblue;}
+        A:hover {text-decoration: none; color: aliceblue;}
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            getMessages();
+        })
+
+        function getMessages() {
+            let temp = location.href.split("?")
+            let idInput = temp[1].split('=')[1]
+
+
+            $.ajax({
+                type: "GET",
+                url: "/api/lookup",
+                data: {"id" : idInput},
+                success: function (response) {
+                        let title = response.title;
+                        let username = response.username;
+                        let contents = response.contents;
+                        let createdAt = response.createdAt;
+                        addHTML(title, username, createdAt, contents);
+                }
+            });
+        }
+
+        function addHTML(title, username, createdAt, contents) {
+            let tempHtml = makeMessage(title, username, createdAt, contents);
+            $('#wrap').append(tempHtml);
+        }
+
+        function makeMessage(title, username, createdAt, contents) {
+            return `<span class="title">${title}</span>
+                    <div class="username">
+                        ${username} | ${createdAt}
+                    </div>
+                    <hr>
+                    <div class="contents">
+                        ${contents}
+                    </div>
+                    <hr>`;
+        }
+        function home(){
+            location.href= "/";
+        }
+
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h2 class="name"><a href="/">항해블로그</a></h2>
+    </div>
+    <div id="wrap" class="wrap">
+    </div>
+
+    <button class="buttons" onclick="home()">home</button>
+
+</body>
+</html>
